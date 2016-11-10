@@ -5,7 +5,6 @@ public class Agent : MonoBehaviour
 {
     public Vector3 Force = Vector3.zero;
     public Vector3 Acceleration = Vector3.zero;
-    public Vector3 Position;
     public Vector3 Velocity = Vector3.zero;
     public bool Anchor;
     public float mass = 0.1f;
@@ -18,57 +17,64 @@ public class Agent : MonoBehaviour
     public RaycastHit hit;
     void OnMouseDown()
     {
+        Anchor = true;
         screenPoint = Camera.main.WorldToScreenPoint(transform.position);
         offset = transform.position - Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, screenPoint.z));
     }
+
 
     void OnMouseDrag()
     {
         Vector3 curScreenPoint = new Vector3(Input.mousePosition.x, Input.mousePosition.y, screenPoint.z);
         Vector3 curPosition = Camera.main.ScreenToWorldPoint(curScreenPoint) + offset;
         transform.position = curPosition;
-        Position = transform.position;
+
     }
     // Use this for initialization
-    void Awake()
+  
+    void Start()
     {
-        Position = transform.position;
-        
-    }
-    void OnTriggerEnter(Collider enemy) 
-    {
-        if (enemy.gameObject.name == "Wall")  
+        if (number == 0 || number == 9)
         {
-            float mag = Velocity.magnitude;
-            float dot = Vector3.Dot(Velocity.normalized, transform.forward);
-            Velocity = transform.forward - 2 * dot * transform.forward;
+            Anchor = true;
         }
     }
 
     // Update is called once per frame
     void LateUpdate()
     {
-        if (number == 0 || number == 9)
+
+        if (Input.GetMouseButtonDown(1))
         {
-            Anchor = true;
+            Anchor = false;
+            screenPoint = Camera.main.WorldToScreenPoint(transform.position);
+            offset = transform.position - Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, screenPoint.z));
         }
+
         if (Input.GetKeyDown("a"))
         {
             ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out hit))
             {
                 hit.collider.GetComponent<Agent>().Anchor = true;
-                
             }
         }
         if (Anchor != true)
         {
-
-            Position = transform.position;
+            if (transform.position.y < -10)
+            {
+                transform.position = new Vector3(transform.position.x,-10,transform.position.z);
+                Force += new Vector3(0, - 0.7f*(Acceleration.y * mass), 0);
+            }
             Acceleration = 1 / mass * Force;
             Velocity += Acceleration * Time.deltaTime;
-            Position += Velocity * Time.deltaTime;
-            transform.position = Position;
+
+            transform.position += Velocity * Time.deltaTime;
+            transform.position = transform.position;
+
+
+
+
 
 
         }

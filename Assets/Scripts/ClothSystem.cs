@@ -13,7 +13,7 @@ public class ClothSystem : MonoBehaviour
     private int amount = 0;
     [Range(0, 2)]
     public float Grav = 1;
-    [Range(0, 2)]
+    [Range(0, 10)]
     public float Spr = 1;
     [Range(0, 2)]
     public float Damp = 1;
@@ -51,7 +51,7 @@ public class ClothSystem : MonoBehaviour
                 }
                 Agents.Add(newagent);
                 newGameObject.GetComponent<Agent>().number = amount;
-                newGameObject.GetComponent<Agent>().Position = spawn;
+                newGameObject.GetComponent<Agent>().transform.position = spawn;
                 amount++;
                 newGameObject.name = "Joint index" + (Agents.Count - 1).ToString();
             }
@@ -97,10 +97,8 @@ public class ClothSystem : MonoBehaviour
     }
     public void Limit(Agent x)
     {
-        if (Mathf.Abs(x.Velocity.magnitude) > 1)
-        {
-            x.Velocity = (x.Velocity / Mathf.Abs(x.Velocity.magnitude) * 1).normalized;
-        }
+        x.Velocity = Vector3.ClampMagnitude(x.Velocity, 3f);
+       
     }
 
     // Update is called once per frame
@@ -111,11 +109,15 @@ public class ClothSystem : MonoBehaviour
         for (int j = 0; j < amount; j++)
         {
             Agents[j].Force = Grav * Gravity(Agents[j]);
+            
+            
+           
+            
         }
         for (int i = 0; i < SpringDampers.Count; i++)
         {
             instance = SpringDampers[i];
-            if (instance.a.Velocity.magnitude >= 10 || instance.b.Velocity.magnitude >= 17)
+            if (instance.l >= 10)
             {
                 Break = true;
                 SpringDampers.Remove(instance);
@@ -133,17 +135,20 @@ public class ClothSystem : MonoBehaviour
                 }
             }
             instance.ComputeForce(Spr, Damp);
+           
         }
+
         if (Air1 != 0)
         {
             for (int k = 0; k < Triangles.Count; k++)
             {
                 Tinstance = Triangles[k];
-
                 Tinstance.Air(Dense, Drag, Air1 * Vector3.forward);
             }
         }
+        
         Break = false;
+        
     }
     public class SpringDamper
     {
@@ -152,7 +157,7 @@ public class ClothSystem : MonoBehaviour
         private float Spring;
         private float Damper;
         Vector3 e1;
-        float l;
+        public float l;
         Vector3 e;
         float dir1;
         float dir2;
@@ -163,7 +168,7 @@ public class ClothSystem : MonoBehaviour
         {
             Spr1 = Spr;
             Damp1 = Damp;
-            e1 = b.Position - a.Position;
+            e1 = b.transform.position - a.transform.position;
             l = e1.magnitude;
             e = e1 / l;
             dir1 = Vector3.Dot(e, a.Velocity);
@@ -173,7 +178,7 @@ public class ClothSystem : MonoBehaviour
             Force = (Spring + Damper) * e;
             a.Force += Force;
             b.Force += -Force;
-            Debug.DrawLine(a.Position, b.Position, Color.red);
+            Debug.DrawLine(a.transform.position, b.transform.position, Color.red);
 
         }
         public SpringDamper(Agent a, Agent b)
@@ -202,9 +207,9 @@ public class ClothSystem : MonoBehaviour
             Vair1 = Vair;
             Vsurface = (P1.Velocity + P2.Velocity + P3.Velocity) / 3;
             v = Vsurface - Vair;
-            n = Vector3.Cross(P2.Position - P1.Position, P3.Position - P1.Position)
-              / Vector3.Cross(P2.Position - P1.Position, P3.Position - P1.Position).magnitude;
-            a = 0.5f * Vector3.Cross(P2.Position - P1.Position, P3.Position - P1.Position).magnitude;
+            n = Vector3.Cross(P2.transform.position - P1.transform.position, P3.transform.position - P1.transform.position)
+              / Vector3.Cross(P2.transform.position - P1.transform.position, P3.transform.position - P1.transform.position).magnitude;
+            a = 0.5f * Vector3.Cross(P2.transform.position - P1.transform.position, P3.transform.position - P1.transform.position).magnitude;
             Aa = a * (Vector3.Dot(v, n) / v.magnitude);
             Vector3 Faero = -0.5f * p * (v.magnitude * v.magnitude) * c * Aa * n;
             P1.Force += Faero / 3;
