@@ -13,18 +13,44 @@ public class ClothSystem : MonoBehaviour
     private int amount = 0;
     [Range(0, 2)]
     public float Grav = 1;
-    [Range(0, 10)]
+    [Range(1, 10)]
     public float Spr = 1;
-    [Range(0, 2)]
+    [Range(0.1f, 1)]
     public float Damp = 1;
-    [Range(0, 2)]
+    [Range(0, 1)]
     public float Dense = 1;
     [Range(0, 2)]
     public float Drag = 1;
     [Range(-2.5f, 2.5f)]
-    public float Air1 = 1;
+    public float Air1 = 0;
+    [Range(-2.5f, 2.5f)]
+    public float Air2 = 0;
     public bool Break = false;
 
+    public void UISetGravity(UnityEngine.UI.Slider slider)
+    {
+        Grav = slider.value;
+    }
+    public void UISetSpr(UnityEngine.UI.Slider slider)
+    {
+        Spr = slider.value;
+    }
+    public void UISetDamp(UnityEngine.UI.Slider slider)
+    {
+        Damp = slider.value;
+    }
+    public void UISetDense(UnityEngine.UI.Slider slider)
+    {
+        Dense = slider.value;
+    }
+    public void UISetAir1(UnityEngine.UI.Slider slider)
+    {
+        Air1 = slider.value;
+    }
+    public void UISetAir2(UnityEngine.UI.Slider slider)
+    {
+        Air2 = slider.value;
+    }
     // Use this for initialization
     void Awake()
     {
@@ -98,9 +124,7 @@ public class ClothSystem : MonoBehaviour
     public void Limit(Agent x)
     {
         x.Velocity = Vector3.ClampMagnitude(x.Velocity, 3f);
-       
     }
-
     // Update is called once per frame
     void Update()
     {
@@ -109,10 +133,6 @@ public class ClothSystem : MonoBehaviour
         for (int j = 0; j < amount; j++)
         {
             Agents[j].Force = Grav * Gravity(Agents[j]);
-            
-            
-           
-            
         }
         for (int i = 0; i < SpringDampers.Count; i++)
         {
@@ -121,34 +141,28 @@ public class ClothSystem : MonoBehaviour
             {
                 Break = true;
                 SpringDampers.Remove(instance);
-                if (Air1 != 0 && Break)
+                for (int k = 0; k < Triangles.Count; k++)
                 {
-                    for (int k = 0; k < Triangles.Count; k++)
+                    Tinstance = Triangles[k];
+                    if (Tinstance.P1.Velocity.magnitude >= 17 || Tinstance.P2.Velocity.magnitude >= 17 ||
+                        Tinstance.P3.Velocity.magnitude >= 17)
                     {
-                        Tinstance = Triangles[k];
-                        if (Tinstance.P1.Velocity.magnitude >= 17 || Tinstance.P2.Velocity.magnitude >= 17 ||
-                            Tinstance.P3.Velocity.magnitude >= 17)
-                        {
-                            Triangles.Remove(Tinstance);
-                        }
+                        Triangles.Remove(Tinstance);
                     }
                 }
             }
             instance.ComputeForce(Spr, Damp);
-           
         }
 
-        if (Air1 != 0)
+        if (Air1 != 0 || Air2 != 0)
         {
             for (int k = 0; k < Triangles.Count; k++)
             {
                 Tinstance = Triangles[k];
-                Tinstance.Air(Dense, Drag, Air1 * Vector3.forward);
+                Tinstance.Air(Dense, Drag, Air1 * Vector3.forward + Air2 * Vector3.left);
             }
         }
-        
         Break = false;
-        
     }
     public class SpringDamper
     {
@@ -179,7 +193,6 @@ public class ClothSystem : MonoBehaviour
             a.Force += Force;
             b.Force += -Force;
             Debug.DrawLine(a.transform.position, b.transform.position, Color.red);
-
         }
         public SpringDamper(Agent a, Agent b)
         {
