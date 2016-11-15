@@ -72,15 +72,6 @@ public class ClothSystem : MonoBehaviour
     void CreateSpring(Agent a, Agent b,LineRenderer Line,int index)
     {
         SpringDamper newSpringDamperx = new SpringDamper(a, b);
-        if (Agents[index].GetComponent<LineRenderer>() != null)
-        {
-            Line = Agents[index].GetComponent<LineRenderer>();
-        }
-        else
-        {
-            Line = Agents[index].gameObject.AddComponent<LineRenderer>();
-        }
-        Line.SetWidth(0.2f, 0.2f);
         SpringDampers.Add(newSpringDamperx);
 
     }
@@ -124,7 +115,7 @@ public class ClothSystem : MonoBehaviour
         text.SetActive(false);
         for (int i = 0; i < amount; i++)
         {
-            LineRenderer line;
+
             if (Agents[i].number % dims != 0 && Agents[i].number != 0)
             {
                 CreateSpring(Agents[i], Agents[i - 1], new LineRenderer(), i);
@@ -145,8 +136,10 @@ public class ClothSystem : MonoBehaviour
             {
                 Triangle newTrianglex = new Triangle(Agents[i], Agents[i + dims + 1], Agents[i + 1]);
                 Triangles.Add(newTrianglex);
+
                 Triangle newTriangley = new Triangle(Agents[i], Agents[i + dims + 1], Agents[i + dims]);
                 Triangles.Add(newTriangley);
+
             }
         }
     }
@@ -229,12 +222,6 @@ public class ClothSystem : MonoBehaviour
             a.Force += Force;
             b.Force += -Force;
             Debug.DrawLine(a.transform.position, b.transform.position, Color.red);
-            a.GetComponent<LineRenderer>().SetPosition(0, a.transform.position);
-            a.GetComponent<LineRenderer>().SetPosition(1,b.transform.position);
-            b.GetComponent<LineRenderer>().SetPosition(0, a.transform.position);
-            b.GetComponent<LineRenderer>().SetPosition(1, b.transform.position);
-
-            //b.GetComponent<LineRenderer>().SetPosition(1, a.transform.position);
 
         }
         public SpringDamper(Agent a, Agent b)
