@@ -18,7 +18,11 @@ public class Agent : MonoBehaviour
     public RaycastHit hit;
     void OnMouseDown()
     {
-        Anchor = true;
+        ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        if (Physics.Raycast(ray, out hit))
+        {
+            hit.collider.GetComponent<Agent>().Anchor = true;
+        }
         screenPoint = Camera.main.WorldToScreenPoint(transform.position);
         offset = transform.position - Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, screenPoint.z));
     }
@@ -39,18 +43,13 @@ public class Agent : MonoBehaviour
     // Update is called once per frame
     void LateUpdate()
     {
+
         if (Input.GetMouseButtonDown(1))
-        {
-            Anchor = false;
-            screenPoint = Camera.main.WorldToScreenPoint(transform.position);
-            offset = transform.position - Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, screenPoint.z));
-        }
-        if (Input.GetKeyDown("a"))
         {
             ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out hit))
             {
-                hit.collider.GetComponent<Agent>().Anchor = true;
+                hit.collider.GetComponent<Agent>().Anchor = false;
             }
         }
         //top

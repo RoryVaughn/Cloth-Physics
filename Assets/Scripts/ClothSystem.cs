@@ -13,6 +13,8 @@ public class ClothSystem : MonoBehaviour
     private int amount = 0;
     [Range(0, 2)]
     public float Grav = 1;
+    [Range(0.5f, 2)]
+    public float rest = 1;
     [Range(1, 10)]
     public float Spr = 1;
     [Range(0.1f, 1)]
@@ -26,10 +28,25 @@ public class ClothSystem : MonoBehaviour
     [Range(-2.5f, 2.5f)]
     public float Air2 = 0;
     public bool Break = false;
+    public bool intruct = false;
+    public GameObject text;
 
     public void UISetGravity(UnityEngine.UI.Slider slider)
     {
         Grav = slider.value;
+    }
+    public void UIintructions(UnityEngine.UI.Button button)
+    {
+         intruct = button;
+        if (text.activeSelf)
+        {
+            text.SetActive(false);
+        }
+        else text.SetActive(true);
+    }
+    public void UISetRest(UnityEngine.UI.Slider slider)
+    {
+        rest = slider.value;
     }
     public void UISetSpr(UnityEngine.UI.Slider slider)
     {
@@ -51,6 +68,22 @@ public class ClothSystem : MonoBehaviour
     {
         Air2 = slider.value;
     }
+
+    void CreateSpring(Agent a, Agent b,LineRenderer Line,int index)
+    {
+        SpringDamper newSpringDamperx = new SpringDamper(a, b);
+        if (Agents[index].GetComponent<LineRenderer>() != null)
+        {
+            Line = Agents[index].GetComponent<LineRenderer>();
+        }
+        else
+        {
+            Line = Agents[index].gameObject.AddComponent<LineRenderer>();
+        }
+        Line.SetWidth(0.2f, 0.2f);
+        SpringDampers.Add(newSpringDamperx);
+
+    }
     // Use this for initialization
     void Awake()
     {
@@ -67,6 +100,7 @@ public class ClothSystem : MonoBehaviour
                 GameObject newGameObject = Instantiate(Joint, spawn, Quaternion.identity) as GameObject;
 
                 Agent newagent;
+                
                 if (newGameObject.GetComponent<Agent>() != null)
                 {
                     newagent = newGameObject.GetComponent<Agent>();
@@ -75,7 +109,9 @@ public class ClothSystem : MonoBehaviour
                 {
                     newagent = newGameObject.AddComponent<Agent>();
                 }
+                
                 Agents.Add(newagent);
+                
                 newGameObject.GetComponent<Agent>().number = amount;
                 newGameObject.GetComponent<Agent>().transform.position = spawn;
                 amount++;
@@ -85,27 +121,25 @@ public class ClothSystem : MonoBehaviour
     }
     void Start()
     {
+        text.SetActive(false);
         for (int i = 0; i < amount; i++)
         {
+            LineRenderer line;
             if (Agents[i].number % dims != 0 && Agents[i].number != 0)
             {
-                SpringDamper newSpringDamperx = new SpringDamper(Agents[i], Agents[i - 1]);
-                SpringDampers.Add(newSpringDamperx);
+                CreateSpring(Agents[i], Agents[i - 1], new LineRenderer(), i);
             }
             if (Agents[i].number >= dims)
             {
-                SpringDamper newSpringDampery = new SpringDamper(Agents[i], Agents[i - dims]);
-                SpringDampers.Add(newSpringDampery);
+                CreateSpring(Agents[i], Agents[i - dims], new LineRenderer(), i);
             }
             if (Agents[i].number % dims != dims - 1 && Agents[i].number < dims * dims - 1 - dims)
             {
-                SpringDamper newSpringDamperz = new SpringDamper(Agents[i], Agents[i + dims + 1]);
-                SpringDampers.Add(newSpringDamperz);
+                CreateSpring(Agents[i], Agents[i + dims + 1], new LineRenderer(), i);
             }
             if (Agents[i].number % dims != dims - 1 && Agents[i].number >= dims)
             {
-                SpringDamper newSpringDamperw = new SpringDamper(Agents[i], Agents[i - dims + 1]);
-                SpringDampers.Add(newSpringDamperw);
+                CreateSpring(Agents[i], Agents[i - dims + 1], new LineRenderer(), i);
             }
             if (Agents[i].number % dims != dims - 1 && Agents[i].number < dims * dims - 1 - dims)
             {
@@ -151,7 +185,7 @@ public class ClothSystem : MonoBehaviour
                     }
                 }
             }
-            instance.ComputeForce(Spr, Damp);
+            instance.ComputeForce(Spr, Damp,rest);
         }
 
         if (Air1 != 0 || Air2 != 0)
@@ -178,21 +212,30 @@ public class ClothSystem : MonoBehaviour
         Vector3 Force;
         float Spr1;
         float Damp1;
-        public void ComputeForce(float Spr, float Damp)
+        float Rest1;
+        public void ComputeForce(float Spr, float Damp,float Rest)
         {
             Spr1 = Spr;
             Damp1 = Damp;
+            Rest1 = Rest;
             e1 = b.transform.position - a.transform.position;
             l = e1.magnitude;
             e = e1 / l;
             dir1 = Vector3.Dot(e, a.Velocity);
             dir2 = Vector3.Dot(e, b.Velocity);
-            Spring = -Spr1 * (1.0f - l);
+            Spring = -Spr1 * (Rest1 - l);
             Damper = -Damp1 * (dir1 - dir2);
             Force = (Spring + Damper) * e;
             a.Force += Force;
             b.Force += -Force;
             Debug.DrawLine(a.transform.position, b.transform.position, Color.red);
+            a.GetComponent<LineRenderer>().SetPosition(0, a.transform.position);
+            a.GetComponent<LineRenderer>().SetPosition(1,b.transform.position);
+            b.GetComponent<LineRenderer>().SetPosition(0, a.transform.position);
+            b.GetComponent<LineRenderer>().SetPosition(1, b.transform.position);
+
+            //b.GetComponent<LineRenderer>().SetPosition(1, a.transform.position);
+
         }
         public SpringDamper(Agent a, Agent b)
         {
