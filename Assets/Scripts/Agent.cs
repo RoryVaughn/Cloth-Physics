@@ -4,8 +4,11 @@ using System.Security.AccessControl;
 
 public class Agent : MonoBehaviour
 {
+    [HideInInspector]
     public Vector3 Force = Vector3.zero;
+    [HideInInspector]
     public Vector3 Acceleration = Vector3.zero;
+    [HideInInspector]
     public Vector3 Velocity = Vector3.zero;
     public bool Anchor;
     public float mass = 0.1f;

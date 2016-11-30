@@ -30,6 +30,7 @@ public class ClothSystem : MonoBehaviour
     public bool Break = false;
     public bool intruct = false;
     public GameObject text;
+    public GameObject Line;
 
     public void UISetGravity(UnityEngine.UI.Slider slider)
     {
@@ -37,7 +38,7 @@ public class ClothSystem : MonoBehaviour
     }
     public void UIintructions(UnityEngine.UI.Button button)
     {
-         intruct = button;
+        intruct = button;
         if (text.activeSelf)
         {
             text.SetActive(false);
@@ -69,9 +70,11 @@ public class ClothSystem : MonoBehaviour
         Air2 = slider.value;
     }
 
-    void CreateSpring(Agent a, Agent b,LineRenderer Line,int index)
+    void CreateSpring(Agent a, Agent b, int index)
     {
         SpringDamper newSpringDamperx = new SpringDamper(a, b);
+        Instantiate(Line);
+
         SpringDampers.Add(newSpringDamperx);
 
     }
@@ -91,7 +94,7 @@ public class ClothSystem : MonoBehaviour
                 GameObject newGameObject = Instantiate(Joint, spawn, Quaternion.identity) as GameObject;
 
                 Agent newagent;
-                
+
                 if (newGameObject.GetComponent<Agent>() != null)
                 {
                     newagent = newGameObject.GetComponent<Agent>();
@@ -100,9 +103,11 @@ public class ClothSystem : MonoBehaviour
                 {
                     newagent = newGameObject.AddComponent<Agent>();
                 }
-                
+
+
+
                 Agents.Add(newagent);
-                
+
                 newGameObject.GetComponent<Agent>().number = amount;
                 newGameObject.GetComponent<Agent>().transform.position = spawn;
                 amount++;
@@ -116,21 +121,31 @@ public class ClothSystem : MonoBehaviour
         for (int i = 0; i < amount; i++)
         {
 
+
+
             if (Agents[i].number % dims != 0 && Agents[i].number != 0)
             {
-                CreateSpring(Agents[i], Agents[i - 1], new LineRenderer(), i);
+
+                CreateSpring(Agents[i], Agents[i - 1], i);
+
             }
             if (Agents[i].number >= dims)
             {
-                CreateSpring(Agents[i], Agents[i - dims], new LineRenderer(), i);
+
+                CreateSpring(Agents[i], Agents[i - dims], i);
+
             }
             if (Agents[i].number % dims != dims - 1 && Agents[i].number < dims * dims - 1 - dims)
             {
-                CreateSpring(Agents[i], Agents[i + dims + 1], new LineRenderer(), i);
+
+                CreateSpring(Agents[i], Agents[i + dims + 1], i);
+
             }
             if (Agents[i].number % dims != dims - 1 && Agents[i].number >= dims)
             {
-                CreateSpring(Agents[i], Agents[i - dims + 1], new LineRenderer(), i);
+
+                CreateSpring(Agents[i], Agents[i - dims + 1], i);
+
             }
             if (Agents[i].number % dims != dims - 1 && Agents[i].number < dims * dims - 1 - dims)
             {
@@ -164,6 +179,8 @@ public class ClothSystem : MonoBehaviour
         for (int i = 0; i < SpringDampers.Count; i++)
         {
             instance = SpringDampers[i];
+
+
             if (instance.l >= 10)
             {
                 Break = true;
@@ -178,7 +195,7 @@ public class ClothSystem : MonoBehaviour
                     }
                 }
             }
-            instance.ComputeForce(Spr, Damp,rest);
+            instance.ComputeForce(Spr, Damp, rest);
         }
 
         if (Air1 != 0 || Air2 != 0)
@@ -206,7 +223,8 @@ public class ClothSystem : MonoBehaviour
         float Spr1;
         float Damp1;
         float Rest1;
-        public void ComputeForce(float Spr, float Damp,float Rest)
+        LineRenderer line;
+        public void ComputeForce(float Spr, float Damp, float Rest)
         {
             Spr1 = Spr;
             Damp1 = Damp;
