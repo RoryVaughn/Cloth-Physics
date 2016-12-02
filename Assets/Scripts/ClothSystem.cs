@@ -32,7 +32,7 @@ public class ClothSystem : MonoBehaviour
     public bool intruct = false;
     public GameObject text;
     public GameObject Line;
-    public List<GameObject> Lines;
+
 
     public void UISetGravity(UnityEngine.UI.Slider slider)
     {
@@ -76,11 +76,20 @@ public class ClothSystem : MonoBehaviour
     {
         SpringDamper newSpringDamperx = new SpringDamper(a, b);
         Instantiate(Line);
-        newSpringDamperx.line = Line;
-
-        
-
-        SpringDampers.Add(newSpringDamperx);
+        Line.name = "Line Index" + (index).ToString();
+        if (Line.name == "Line Index99(Clone)")
+        {
+            newSpringDamperx.line = Line;
+            Line.GetComponent<LineConnect>().P1 = GameObject.Find("Joint index89");
+            Line.GetComponent<LineConnect>().P2 = GameObject.Find("Joint index99");
+            SpringDampers.Add(newSpringDamperx);
+        }
+        else {
+            newSpringDamperx.line = Line;
+            Line.GetComponent<LineConnect>().P1 = a.gameObject;
+            Line.GetComponent<LineConnect>().P2 = b.gameObject;
+            SpringDampers.Add(newSpringDamperx);
+        }
 
     }
     // Use this for initialization
@@ -89,7 +98,7 @@ public class ClothSystem : MonoBehaviour
         Agents = new List<Agent>();
         SpringDampers = new List<SpringDamper>();
         Triangles = new List<Triangle>();
-        Lines = new List<GameObject>();
+
         if (Joint == null)
             return;
         for (int x = 0; x < dims; x++)
@@ -126,34 +135,27 @@ public class ClothSystem : MonoBehaviour
         text.SetActive(false);
         for (int i = 0; i < amount; i++)
         {
-
-
-
             if (Agents[i].number % dims != 0 && Agents[i].number != 0)
             {
-
-                CreateSpring(Agents[i], Agents[i - 1], i);
-
-
+                CreateSpring(Agents[i], Agents[i - 1], i); //connect left
             }
             if (Agents[i].number >= dims)
             {
-
-                CreateSpring(Agents[i], Agents[i - dims], i);
-
+                CreateSpring(Agents[i], Agents[i - dims], i); //Connect down
             }
             if (Agents[i].number % dims != dims - 1 && Agents[i].number < dims * dims - 1 - dims)
             {
 
-                CreateSpring(Agents[i], Agents[i + dims + 1], i);
+                CreateSpring(Agents[i], Agents[i + dims + 1], i); //top right
 
             }
             if (Agents[i].number % dims != dims - 1 && Agents[i].number >= dims)
             {
 
-                CreateSpring(Agents[i], Agents[i - dims + 1], i);
+                CreateSpring(Agents[i], Agents[i - dims + 1], i); //bot right
 
             }
+
             if (Agents[i].number % dims != dims - 1 && Agents[i].number < dims * dims - 1 - dims)
             {
                 Triangle newTrianglex = new Triangle(Agents[i], Agents[i + dims + 1], Agents[i + 1]);
@@ -178,7 +180,7 @@ public class ClothSystem : MonoBehaviour
     void Update()
     {
         SpringDamper instance;
-        GameObject Linstance;
+
         Triangle Tinstance;
         for (int j = 0; j < amount; j++)
         {
@@ -193,6 +195,7 @@ public class ClothSystem : MonoBehaviour
             if (instance.l >= 10)
             {
                 Break = true;
+
                 SpringDampers.Remove(instance);
                 for (int k = 0; k < Triangles.Count; k++)
                 {
@@ -249,8 +252,7 @@ public class ClothSystem : MonoBehaviour
             Force = (Spring + Damper) * e;
             a.Force += Force;
             b.Force += -Force;
-            line.GetComponent<LineConnect>().P1.transform.position = a.GetComponent<Agent>().transform.position;
-            line.GetComponent<LineConnect>().P2.transform.position = b.GetComponent<Agent>().transform.position;
+
             Debug.DrawLine(a.transform.position, b.transform.position, Color.red);
 
         }
