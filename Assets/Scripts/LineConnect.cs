@@ -8,17 +8,13 @@ public class LineConnect : MonoBehaviour {
     private LineRenderer Line;
     public GameObject Spawn;
     // Use this for initialization
-    void Start () {
+    void Awake () {
         Line = gameObject.GetComponent<LineRenderer>();
-        foreach (GameObject i in GetComponentsInChildren<GameObject>());
-        {
-            int i = 0;
-                P1 = GetComponentInChildren<Transform>().gameObject;
-            if (i > 0)
-            {
-                P2 = GetComponentInChildren<Transform>().gameObject;
-            }
-        }
+
+                P1 = transform.Find("P1").gameObject;
+
+                P2 = transform.Find("P2").gameObject;
+
      
         Line.SetPosition(0, P1.transform.position);
         Line.SetPosition(1, P2.transform.position);

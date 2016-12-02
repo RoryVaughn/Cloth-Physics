@@ -4,6 +4,7 @@ using JetBrains.Annotations;
 using UnityEngine.Networking;
 public class ClothSystem : MonoBehaviour
 {
+
     public List<Agent> Agents;
     public List<SpringDamper> SpringDampers;
     public List<Triangle> Triangles;
@@ -31,6 +32,7 @@ public class ClothSystem : MonoBehaviour
     public bool intruct = false;
     public GameObject text;
     public GameObject Line;
+    public List<GameObject> Lines;
 
     public void UISetGravity(UnityEngine.UI.Slider slider)
     {
@@ -74,6 +76,9 @@ public class ClothSystem : MonoBehaviour
     {
         SpringDamper newSpringDamperx = new SpringDamper(a, b);
         Instantiate(Line);
+        newSpringDamperx.line = Line;
+
+        
 
         SpringDampers.Add(newSpringDamperx);
 
@@ -84,6 +89,7 @@ public class ClothSystem : MonoBehaviour
         Agents = new List<Agent>();
         SpringDampers = new List<SpringDamper>();
         Triangles = new List<Triangle>();
+        Lines = new List<GameObject>();
         if (Joint == null)
             return;
         for (int x = 0; x < dims; x++)
@@ -128,6 +134,7 @@ public class ClothSystem : MonoBehaviour
 
                 CreateSpring(Agents[i], Agents[i - 1], i);
 
+
             }
             if (Agents[i].number >= dims)
             {
@@ -171,6 +178,7 @@ public class ClothSystem : MonoBehaviour
     void Update()
     {
         SpringDamper instance;
+        GameObject Linstance;
         Triangle Tinstance;
         for (int j = 0; j < amount; j++)
         {
@@ -179,6 +187,7 @@ public class ClothSystem : MonoBehaviour
         for (int i = 0; i < SpringDampers.Count; i++)
         {
             instance = SpringDampers[i];
+
 
 
             if (instance.l >= 10)
@@ -196,6 +205,7 @@ public class ClothSystem : MonoBehaviour
                 }
             }
             instance.ComputeForce(Spr, Damp, rest);
+
         }
 
         if (Air1 != 0 || Air2 != 0)
@@ -223,7 +233,7 @@ public class ClothSystem : MonoBehaviour
         float Spr1;
         float Damp1;
         float Rest1;
-        LineRenderer line;
+        public GameObject line;
         public void ComputeForce(float Spr, float Damp, float Rest)
         {
             Spr1 = Spr;
@@ -239,6 +249,8 @@ public class ClothSystem : MonoBehaviour
             Force = (Spring + Damper) * e;
             a.Force += Force;
             b.Force += -Force;
+            line.GetComponent<LineConnect>().P1.transform.position = a.GetComponent<Agent>().transform.position;
+            line.GetComponent<LineConnect>().P2.transform.position = b.GetComponent<Agent>().transform.position;
             Debug.DrawLine(a.transform.position, b.transform.position, Color.red);
 
         }
