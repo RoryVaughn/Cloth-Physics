@@ -11,6 +11,7 @@ public class LineConnect : MonoBehaviour {
     void Awake () {
         Line = gameObject.GetComponent<LineRenderer>();
         Line.SetWidth(0.1f,0.1f);
+        Line.SetColors(Color.black, Color.red);
     }
 	
 	// Update is called once per frame

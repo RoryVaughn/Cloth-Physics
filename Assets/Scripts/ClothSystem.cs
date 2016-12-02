@@ -74,23 +74,17 @@ public class ClothSystem : MonoBehaviour
 
     void CreateSpring(Agent a, Agent b, int index)
     {
-        SpringDamper newSpringDamperx = new SpringDamper(a, b);
-        Instantiate(Line);
-        Line.name = "Line Index" + (index).ToString();
-        if (Line.name == "Line Index99(Clone)")
-        {
-            newSpringDamperx.line = Line;
-            Line.GetComponent<LineConnect>().P1 = GameObject.Find("Joint index89");
-            Line.GetComponent<LineConnect>().P2 = GameObject.Find("Joint index99");
-            SpringDampers.Add(newSpringDamperx);
-        }
-        else {
-            newSpringDamperx.line = Line;
-            Line.GetComponent<LineConnect>().P1 = a.gameObject;
-            Line.GetComponent<LineConnect>().P2 = b.gameObject;
-            SpringDampers.Add(newSpringDamperx);
-        }
+        SpringDamper sd = new SpringDamper(a, b);
+        SpringDampers.Add(sd);
 
+        
+        GameObject go = Instantiate(Line) as GameObject;
+        go.name = "Line Index" + (index).ToString();
+        sd.line = go;
+        go.GetComponent<LineConnect>().P1 = a.gameObject;
+        go.GetComponent<LineConnect>().P2 = b.gameObject;
+
+        
     }
     // Use this for initialization
     void Awake()
@@ -197,6 +191,7 @@ public class ClothSystem : MonoBehaviour
                 Break = true;
 
                 SpringDampers.Remove(instance);
+                instance.line.active = false;
                 for (int k = 0; k < Triangles.Count; k++)
                 {
                     Tinstance = Triangles[k];
@@ -253,8 +248,13 @@ public class ClothSystem : MonoBehaviour
             a.Force += Force;
             b.Force += -Force;
 
-            Debug.DrawLine(a.transform.position, b.transform.position, Color.red);
+            
 
+        }
+        public SpringDamper()
+        {
+            this.a = null;
+            this.b = null;
         }
         public SpringDamper(Agent a, Agent b)
         {

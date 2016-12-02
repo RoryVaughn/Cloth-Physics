@@ -38,7 +38,7 @@ public class Agent : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        if (number == 0 || number == 9)
+        if (number == 0 || number == dims -1)
         {
             Anchor = true;
         }
