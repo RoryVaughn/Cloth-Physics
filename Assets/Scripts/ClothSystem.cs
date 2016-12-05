@@ -47,6 +47,11 @@ public class ClothSystem : MonoBehaviour
         }
         else text.SetActive(true);
     }
+
+    public void UIReset(UnityEngine.UI.Button button)
+    {
+        Application.LoadLevel(0);
+    }
     public void UISetRest(UnityEngine.UI.Slider slider)
     {
         rest = slider.value;
