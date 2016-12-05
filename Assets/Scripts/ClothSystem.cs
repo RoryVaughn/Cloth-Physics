@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
-using JetBrains.Annotations;
-using UnityEngine.Networking;
+using UnityEngine.SceneManagement;
+
 public class ClothSystem : MonoBehaviour
 {
 
@@ -50,7 +50,7 @@ public class ClothSystem : MonoBehaviour
 
     public void UIReset(UnityEngine.UI.Button button)
     {
-        Application.LoadLevel(0);
+        SceneManager.LoadScene(0);
     }
     public void UISetRest(UnityEngine.UI.Slider slider)
     {
@@ -165,6 +165,7 @@ public class ClothSystem : MonoBehaviour
 
             }
         }
+       
     }
     public Vector3 Gravity(Agent x)
     {
@@ -221,86 +222,6 @@ public class ClothSystem : MonoBehaviour
         }
         Break = false;
     }
-    public class SpringDamper
-    {
-        public Agent a;
-        public Agent b;
-        private float Spring;
-        private float Damper;
-        Vector3 e1;
-        public float l;
-        Vector3 e;
-        float dir1;
-        float dir2;
-        Vector3 Force;
-        float Spr1;
-        float Damp1;
-        float Rest1;
-        public GameObject line;
-        public void ComputeForce(float Spr, float Damp, float Rest)
-        {
-            Spr1 = Spr;
-            Damp1 = Damp;
-            Rest1 = Rest;
-            e1 = b.transform.position - a.transform.position;
-            l = e1.magnitude;
-            e = e1 / l;
-            dir1 = Vector3.Dot(e, a.Velocity);
-            dir2 = Vector3.Dot(e, b.Velocity);
-            Spring = -Spr1 * (Rest1 - l);
-            Damper = -Damp1 * (dir1 - dir2);
-            Force = (Spring + Damper) * e;
-            a.Force += Force;
-            b.Force += -Force;
+   
 
-            
-
-        }
-        public SpringDamper()
-        {
-            this.a = null;
-            this.b = null;
-        }
-        public SpringDamper(Agent a, Agent b)
-        {
-            this.a = a;
-            this.b = b;
-        }
-    }
-    public class Triangle
-    {
-        public Agent P1;
-        public Agent P2;
-        public Agent P3;
-        public float p;
-        public float c;
-        public float a;
-        public float Aa;
-        public Vector3 n;
-        public Vector3 Vsurface;
-        public Vector3 Vair1;
-        public Vector3 v;
-        public void Air(float Dense, float Drag, Vector3 Vair)
-        {
-            p = Dense;
-            c = Drag;
-            Vair1 = Vair;
-            Vsurface = (P1.Velocity + P2.Velocity + P3.Velocity) / 3;
-            v = Vsurface - Vair;
-            n = Vector3.Cross(P2.transform.position - P1.transform.position, P3.transform.position - P1.transform.position)
-              / Vector3.Cross(P2.transform.position - P1.transform.position, P3.transform.position - P1.transform.position).magnitude;
-            a = 0.5f * Vector3.Cross(P2.transform.position - P1.transform.position, P3.transform.position - P1.transform.position).magnitude;
-            Aa = a * (Vector3.Dot(v, n) / v.magnitude);
-            Vector3 Faero = -0.5f * p * (v.magnitude * v.magnitude) * c * Aa * n;
-            P1.Force += Faero / 3;
-            P2.Force += Faero / 3;
-            P3.Force += Faero / 3;
-        }
-        public Triangle(Agent P1, Agent P2, Agent P3)
-        {
-            this.P1 = P1;
-            this.P2 = P2;
-            this.P3 = P3;
-        }
-    }
 }

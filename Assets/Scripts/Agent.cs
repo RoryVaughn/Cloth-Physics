@@ -1,8 +1,6 @@
 ﻿using UnityEngine;
-using System.Collections;
-using System.Security.AccessControl;
 
-public class Agent : MonoBehaviour
+public class Agent : MonoBehaviour//, IPointerDownHandler, IDragHandler
 {
     [HideInInspector]
     public Vector3 Force = Vector3.zero;
@@ -38,7 +36,7 @@ public class Agent : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        if (number == 0 || number == dims -1)
+        if (number == 0 || number == dims - 1)
         {
             Anchor = true;
         }
@@ -95,8 +93,27 @@ public class Agent : MonoBehaviour
         {
             Acceleration = 1 / mass * Force;
             Velocity += Acceleration * Time.deltaTime;
+            Velocity = Vector3.ClampMagnitude(Velocity, 5.0f);
             transform.position += Velocity * Time.deltaTime;
             transform.position = transform.position;
         }
     }
+
+    //public void OnPointerDown(PointerEventData eventData)
+    //{
+    //    //offset = transform.position - Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, screenPoint.z));
+    //    GetComponent<Agent>().Anchor = true;
+    //    Debug.Log("pointer down");
+    //}
+
+    //public void OnDrag(PointerEventData eventData)
+    //{
+    //    offset = new Vector3(eventData.delta.x, eventData.delta.y , 0.0f) * Time.deltaTime;
+                
+    //    transform.position = (transform.position + offset) ;
+
+        
+    
+        
+    //}
 }
