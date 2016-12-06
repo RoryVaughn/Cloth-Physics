@@ -10,36 +10,38 @@ public class ClothSystem : MonoBehaviour
     public List<Triangle> Triangles;
     public GameObject Joint;
     public float mass = 0.1f;
-    public int dims = 10;
+    public int dims = 10; //dimensions of nocdes in the cloth
     private int amount = 0;
     [Range(0, 2)]
-    public float Grav = 1;
+    public float Grav = 1; //gravity slider
     [Range(0.5f, 2)]
-    public float rest = 1;
+    public float rest = 1; //rest length slider
     [Range(1, 10)]
-    public float Spr = 1;
+    public float Spr = 1; //springyness slider
     [Range(0.1f, 1)]
-    public float Damp = 1;
+    public float Damp = 1; //damping slider
     [Range(0, 1)]
-    public float Dense = 1;
+    public float Dense = 1; //Particle density slider
     [Range(0, 2)]
-    public float Drag = 1;
+    public float Drag = 1; //particle drag slider 
     [Range(-2.5f, 2.5f)]
-    public float Air1 = 0;
+    public float Air1 = 0; //power of Air in the z direction.
     [Range(-2.5f, 2.5f)]
-    public float Air2 = 0;
+    public float Air2 = 0; //power of air in hte x direction.
     public bool Break = false;
     public bool intruct = false;
     public GameObject text;
     public GameObject Line;
 
-
+    //The following are UI ellements that can be used to edit infomation in the simulation from thge user.
     public void UISetGravity(UnityEngine.UI.Slider slider)
     {
+        //changes the gravity coefficent in the simulation.
         Grav = slider.value;
     }
     public void UIintructions(UnityEngine.UI.Button button)
     {
+        //opens the instructions to be visible to the user.
         intruct = button;
         if (text.activeSelf)
         {
@@ -49,35 +51,43 @@ public class ClothSystem : MonoBehaviour
     }
 
     public void UIReset(UnityEngine.UI.Button button)
-    {
+    { 
+        //button that resets the scene
         SceneManager.LoadScene(0);
     }
     public void UISetRest(UnityEngine.UI.Slider slider)
     {
+        //changes the rest length of the spring dampers in the simulation.
         rest = slider.value;
     }
     public void UISetSpr(UnityEngine.UI.Slider slider)
     {
+        //changes the spring coefficent in the simulation.
         Spr = slider.value;
     }
     public void UISetDamp(UnityEngine.UI.Slider slider)
     {
+        //changes the damping factor coefficent in the simulation.
         Damp = slider.value;
     }
     public void UISetDense(UnityEngine.UI.Slider slider)
     {
+        //changes the density coefficent in the simulation.
         Dense = slider.value;
     }
     public void UISetAir1(UnityEngine.UI.Slider slider)
     {
+        //changes the power of the air in the z direction in the simulation.
         Air1 = slider.value;
     }
     public void UISetAir2(UnityEngine.UI.Slider slider)
     {
+        //changes the power of the air in the x direction in the simulation.
         Air2 = slider.value;
     }
 
-    void CreateSpring(Agent a, Agent b, int index)
+    void CreateSpring(Agent a, Agent b, int index) //creates a spring that consists of two particles
+        //and a line between the two particles to represent the bond.
     {
         SpringDamper sd = new SpringDamper(a, b);
         SpringDampers.Add(sd);

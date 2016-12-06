@@ -8,12 +8,12 @@ public class Agent : MonoBehaviour//, IPointerDownHandler, IDragHandler
     public Vector3 Acceleration = Vector3.zero;
     [HideInInspector]
     public Vector3 Velocity = Vector3.zero;
-    public bool Anchor;
+    public bool Anchor; //disables reational movement from other nodes
     public float mass = 0.1f;
     public int number;
     int dims = 10;
     public Vector3 r;
-    public Vector3 offset;
+    public Vector3 offset; // offset from the origin of the click
     public Vector3 screenPoint;
     private Ray ray;
     public RaycastHit hit;
@@ -36,6 +36,7 @@ public class Agent : MonoBehaviour//, IPointerDownHandler, IDragHandler
     // Use this for initialization
     void Start()
     {
+        //sets the first two anchors
         if (number == 0 || number == dims - 1)
         {
             Anchor = true;
@@ -44,7 +45,7 @@ public class Agent : MonoBehaviour//, IPointerDownHandler, IDragHandler
     // Update is called once per frame
     void LateUpdate()
     {
-
+        //unsets an achor
         if (Input.GetMouseButtonDown(1))
         {
             ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -53,37 +54,37 @@ public class Agent : MonoBehaviour//, IPointerDownHandler, IDragHandler
                 hit.collider.GetComponent<Agent>().Anchor = false;
             }
         }
-        //top
+        //top boundaries
         if (transform.position.y > 1.7f)
         {
             transform.position = new Vector3(transform.position.x, 1.7f, transform.position.z);
             Force += new Vector3(0, -0.7f * (Acceleration.y * mass), 0);
         }
-        //bot
+        //bot boundaries
         if (transform.position.y < -10.8f)
         {
             transform.position = new Vector3(transform.position.x, -10.8f, transform.position.z);
             Force += new Vector3(0, -0.7f * (Acceleration.y * mass), 0);
         }
-        //back wall
+        //back wall boundaries
         if (transform.position.z > 5.0f)
         {
             transform.position = new Vector3(transform.position.x, transform.position.y, 5.0f);
             Force += new Vector3(0, 0, -0.7f * (Acceleration.z * mass));
         }
-        //your facewall
+        //your facewall boundaries
         if (transform.position.z < -4.0f)
         {
             transform.position = new Vector3(transform.position.x, transform.position.y, -4.0f);
             Force += new Vector3(0, 0, 0.7f * (Acceleration.z * mass));
         }
-        //left
+        //left boundaries
         if (transform.position.x < -3.0f)
         {
             transform.position = new Vector3(-3.0f, transform.position.y, transform.position.z);
             Force += new Vector3(-0.7f * (Acceleration.x * mass), 0, 0);
         }
-        //right
+        //right boundaries
         if (transform.position.x > 13.0f)
         {
             transform.position = new Vector3(13.0f, transform.position.y, transform.position.z);
@@ -91,11 +92,12 @@ public class Agent : MonoBehaviour//, IPointerDownHandler, IDragHandler
         }
         if (Anchor != true)
         {
+            //addition of the forces to change the position of the particles.
             Acceleration = 1 / mass * Force;
             Velocity += Acceleration * Time.deltaTime;
             Velocity = Vector3.ClampMagnitude(Velocity, 5.0f);
             transform.position += Velocity * Time.deltaTime;
-            transform.position = transform.position;
+            transform.position = transform.position; //changing the position over delta time delta time.
         }
     }
 
