@@ -22,7 +22,7 @@ public class SpringDamper
         Spr1 = Spr;
         Damp1 = Damp;
         Rest1 = Rest;
-        e1 = b.transform.position - a.transform.position;
+        e1 = b.Position - a.Position;
         l = e1.magnitude;
         e = e1 / l;
         dir1 = Vector3.Dot(e, a.Velocity);
@@ -33,8 +33,6 @@ public class SpringDamper
         //adds the force to each of the partles in the spring damper
         a.Force += Force;
         b.Force += -Force;
-
-
 
     }
     public SpringDamper()

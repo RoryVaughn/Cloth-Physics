@@ -96,10 +96,10 @@ public class ClothSystem : MonoBehaviour
         GameObject go = Instantiate(Line) as GameObject;
         go.name = "Line Index" + (index).ToString();
         sd.line = go;
-        go.GetComponent<LineConnect>().P1 = a.gameObject;
-        go.GetComponent<LineConnect>().P2 = b.gameObject;
+        go.GetComponent<LineConnect>().P1 = a;
+        go.GetComponent<LineConnect>().P2 = b;
 
-        
+
     }
     // Use this for initialization
     void Awake()
@@ -114,28 +114,28 @@ public class ClothSystem : MonoBehaviour
         {
             for (int y = 0; y < dims; y++)
             {
-                Vector3 spawn = new Vector3(y, -x, 0);
-                GameObject newGameObject = Instantiate(Joint, spawn, Quaternion.identity) as GameObject;
+                Agent a = new Agent(new Vector3(y, -x, 0), amount);
 
-                Agent newagent;
+                GameObject go = Instantiate(Joint, a.Position, Quaternion.identity) as GameObject;
 
-                if (newGameObject.GetComponent<Agent>() != null)
-                {
-                    newagent = newGameObject.GetComponent<Agent>();
-                }
-                else
-                {
-                    newagent = newGameObject.AddComponent<Agent>();
-                }
+                if (go.GetComponent<MonoAgent>() == null)
+                    go.AddComponent<MonoAgent>();
+                //{
+                //    newagent = newGameObject.GetComponent<MonoAgent>();
+                //}
+                //else
+                //{
+                //    newagent = newGameObject.AddComponent<MonoAgent>();
+                //}
 
+                
+                
+                go.GetComponent<MonoAgent>().Particle = a;
+                Agents.Add(a);
 
-
-                Agents.Add(newagent);
-
-                newGameObject.GetComponent<Agent>().number = amount;
-                newGameObject.GetComponent<Agent>().transform.position = spawn;
+                //go.GetComponent<MonoAgent>().number = amount;
                 amount++;
-                newGameObject.name = "Joint index" + (Agents.Count - 1).ToString();
+                go.name = "Joint index" + (Agents.Count - 1).ToString();
             }
         }
     }
@@ -154,9 +154,7 @@ public class ClothSystem : MonoBehaviour
             }
             if (Agents[i].number % dims != dims - 1 && Agents[i].number < dims * dims - 1 - dims)
             {
-
                 CreateSpring(Agents[i], Agents[i + dims + 1], i); //top right
-
             }
             if (Agents[i].number % dims != dims - 1 && Agents[i].number >= dims)
             {
@@ -199,8 +197,6 @@ public class ClothSystem : MonoBehaviour
         for (int i = 0; i < SpringDampers.Count; i++)
         {
             instance = SpringDampers[i];
-
-
 
             if (instance.l >= 10)
             {

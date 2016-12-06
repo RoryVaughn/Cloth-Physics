@@ -3,8 +3,8 @@ using System.Collections;
 
 public class LineConnect : MonoBehaviour {
 
-    public GameObject P1;
-    public GameObject P2;
+    public Agent P1;
+    public Agent P2;
     private LineRenderer Line;
 
     // Use this for initialization
@@ -16,7 +16,7 @@ public class LineConnect : MonoBehaviour {
 	
 	// Update is called once per frame
 	void LateUpdate () {
-        Line.SetPosition(0, P1.transform.position);
-        Line.SetPosition(1, P2.transform.position);
+        Line.SetPosition(0, P1.Position);
+        Line.SetPosition(1, P2.Position);
     }
 }

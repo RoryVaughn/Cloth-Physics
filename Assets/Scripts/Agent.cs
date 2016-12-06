@@ -1,121 +1,42 @@
 ﻿using UnityEngine;
+using System.Collections;
 
-public class Agent : MonoBehaviour//, IPointerDownHandler, IDragHandler
+public class Agent
 {
-    [HideInInspector]
+//    public MonoAgent a;
     public Vector3 Force = Vector3.zero;
-    [HideInInspector]
     public Vector3 Acceleration = Vector3.zero;
-    [HideInInspector]
     public Vector3 Velocity = Vector3.zero;
+    public Vector3 Position;
+    public int number;
     public bool Anchor; //disables reational movement from other nodes
     public float mass = 0.1f;
-    public int number;
     int dims = 10;
-    public Vector3 r;
-    public Vector3 offset; // offset from the origin of the click
-    public Vector3 screenPoint;
-    private Ray ray;
-    public RaycastHit hit;
-    void OnMouseDown()
+
+    public Vector3 CalcuateForce()
     {
-        ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(ray, out hit))
-        {
-            hit.collider.GetComponent<Agent>().Anchor = true;
-        }
-        screenPoint = Camera.main.WorldToScreenPoint(transform.position);
-        offset = transform.position - Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, screenPoint.z));
+        Acceleration = 1 / mass * Force;
+        Velocity += Acceleration * Time.deltaTime;
+        Velocity = Vector3.ClampMagnitude(Velocity, 5.0f);
+        Position += Velocity * Time.deltaTime;
+        return Position;
     }
-    void OnMouseDrag()
+
+    public Agent()
     {
-        Vector3 curScreenPoint = new Vector3(Input.mousePosition.x, Input.mousePosition.y, screenPoint.z);
-        Vector3 curPosition = Camera.main.ScreenToWorldPoint(curScreenPoint) + offset;
-        transform.position = curPosition;
+        this.Position = Vector3.zero;
+    }
+    public Agent(Vector3 position)
+    {
+        this.Position = position;
+
+    }
+
+    public Agent(Vector3 position, int id)
+    {
+        this.Position = position;
+        this.number = id;
+
     }
     // Use this for initialization
-    void Start()
-    {
-        //sets the first two anchors
-        if (number == 0 || number == dims - 1)
-        {
-            Anchor = true;
-        }
-    }
-    // Update is called once per frame
-    void LateUpdate()
-    {
-        //unsets an achor
-        if (Input.GetMouseButtonDown(1))
-        {
-            ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(ray, out hit))
-            {
-                hit.collider.GetComponent<Agent>().Anchor = false;
-            }
-        }
-        //top boundaries
-        if (transform.position.y > 1.7f)
-        {
-            transform.position = new Vector3(transform.position.x, 1.7f, transform.position.z);
-            Force += new Vector3(0, -0.7f * (Acceleration.y * mass), 0);
-        }
-        //bot boundaries
-        if (transform.position.y < -10.8f)
-        {
-            transform.position = new Vector3(transform.position.x, -10.8f, transform.position.z);
-            Force += new Vector3(0, -0.7f * (Acceleration.y * mass), 0);
-        }
-        //back wall boundaries
-        if (transform.position.z > 5.0f)
-        {
-            transform.position = new Vector3(transform.position.x, transform.position.y, 5.0f);
-            Force += new Vector3(0, 0, -0.7f * (Acceleration.z * mass));
-        }
-        //your facewall boundaries
-        if (transform.position.z < -4.0f)
-        {
-            transform.position = new Vector3(transform.position.x, transform.position.y, -4.0f);
-            Force += new Vector3(0, 0, 0.7f * (Acceleration.z * mass));
-        }
-        //left boundaries
-        if (transform.position.x < -3.0f)
-        {
-            transform.position = new Vector3(-3.0f, transform.position.y, transform.position.z);
-            Force += new Vector3(-0.7f * (Acceleration.x * mass), 0, 0);
-        }
-        //right boundaries
-        if (transform.position.x > 13.0f)
-        {
-            transform.position = new Vector3(13.0f, transform.position.y, transform.position.z);
-            Force += new Vector3(-0.7f * (Acceleration.x * mass), 0, 0);
-        }
-        if (Anchor != true)
-        {
-            //addition of the forces to change the position of the particles.
-            Acceleration = 1 / mass * Force;
-            Velocity += Acceleration * Time.deltaTime;
-            Velocity = Vector3.ClampMagnitude(Velocity, 5.0f);
-            transform.position += Velocity * Time.deltaTime;
-            transform.position = transform.position; //changing the position over delta time delta time.
-        }
-    }
-
-    //public void OnPointerDown(PointerEventData eventData)
-    //{
-    //    //offset = transform.position - Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, screenPoint.z));
-    //    GetComponent<Agent>().Anchor = true;
-    //    Debug.Log("pointer down");
-    //}
-
-    //public void OnDrag(PointerEventData eventData)
-    //{
-    //    offset = new Vector3(eventData.delta.x, eventData.delta.y , 0.0f) * Time.deltaTime;
-                
-    //    transform.position = (transform.position + offset) ;
-
-        
-    
-        
-    //}
 }

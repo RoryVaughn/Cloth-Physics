@@ -919,7 +919,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f00a14e2d08ff8a4ca8d690cff11c8fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Agents: []
   Joint: {fileID: 1000011157726044, guid: dc499c9b64cb5154fb173b813e03f374, type: 2}
   mass: 0.1
   dims: 10

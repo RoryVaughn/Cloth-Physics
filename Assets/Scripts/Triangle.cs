@@ -21,9 +21,9 @@ public class Triangle
         Vair1 = Vair;
         Vsurface = (P1.Velocity + P2.Velocity + P3.Velocity) / 3;
         v = Vsurface - Vair;
-        n = Vector3.Cross(P2.transform.position - P1.transform.position, P3.transform.position - P1.transform.position)
-          / Vector3.Cross(P2.transform.position - P1.transform.position, P3.transform.position - P1.transform.position).magnitude;
-        a = 0.5f * Vector3.Cross(P2.transform.position - P1.transform.position, P3.transform.position - P1.transform.position).magnitude;
+        n = Vector3.Cross(P2.Position - P1.Position, P3.Position - P1.Position)
+          / Vector3.Cross(P2.Position - P1.Position, P3.Position - P1.Position).magnitude;
+        a = 0.5f * Vector3.Cross(P2.Position - P1.Position, P3.Position - P1.Position).magnitude;
         Aa = a * (Vector3.Dot(v, n) / v.magnitude);
         //calculates the strength and direction of the wind
         Vector3 Faero = -0.5f * p * (v.magnitude * v.magnitude) * c * Aa * n;
