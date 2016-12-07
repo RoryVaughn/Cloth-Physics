@@ -3,8 +3,8 @@
 public class SpringDamper
 {
     //reference to the two particles in the spring damper
-    public Agent a;
-    public Agent b;
+    public Agent A;
+    public Agent B;
     private float Spring;
     private float Damper;
     Vector3 e1; //displacement between the particles
@@ -23,28 +23,28 @@ public class SpringDamper
         Spr1 = Spr;
         Damp1 = Damp;
         Rest1 = Rest;
-        e1 = b.Position - a.Position;
+        e1 = B.Position - A.Position;
         l = e1.magnitude;
         e = e1/l;
-        dir1 = Vector3.Dot(e, a.Velocity);
-        dir2 = Vector3.Dot(e, b.Velocity);
+        dir1 = Vector3.Dot(e, A.Velocity);
+        dir2 = Vector3.Dot(e, B.Velocity);
         Spring = -Spr1*(Rest1 - l);
         Damper = -Damp1*(dir1 - dir2);
         Force = (Spring + Damper)*e;
         //adds the force to each of the partles in the spring damper
-        a.Force += Force;
-        b.Force += -Force;
+        A.Force += Force;
+        B.Force += -Force;
     }
 
     public SpringDamper()
     {
-        this.a = null;
-        this.b = null;
+        this.A = null;
+        this.B = null;
     }
 
     public SpringDamper(Agent a, Agent b)
     {
-        this.a = a;
-        this.b = b;
+        this.A = a;
+        this.B = b;
     }
 }

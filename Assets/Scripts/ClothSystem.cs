@@ -141,24 +141,24 @@ public class ClothSystem : MonoBehaviour
         text.SetActive(false);
         for (int i = 0; i < amount; i++)
         {
-            if (Agents[i].number%dims != 0 && Agents[i].number != 0)
+            if (Agents[i].Number%dims != 0 && Agents[i].Number != 0)
             {
                 CreateSpring(Agents[i], Agents[i - 1], i); //connect left
             }
-            if (Agents[i].number >= dims)
+            if (Agents[i].Number >= dims)
             {
                 CreateSpring(Agents[i], Agents[i - dims], i); //Connect down
             }
-            if (Agents[i].number%dims != dims - 1 && Agents[i].number < dims*dims - 1 - dims)
+            if (Agents[i].Number%dims != dims - 1 && Agents[i].Number < dims*dims - 1 - dims)
             {
                 CreateSpring(Agents[i], Agents[i + dims + 1], i); //top right
             }
-            if (Agents[i].number%dims != dims - 1 && Agents[i].number >= dims)
+            if (Agents[i].Number%dims != dims - 1 && Agents[i].Number >= dims)
             {
                 CreateSpring(Agents[i], Agents[i - dims + 1], i); //bot right
             }
 
-            if (Agents[i].number%dims != dims - 1 && Agents[i].number < dims*dims - 1 - dims)
+            if (Agents[i].Number%dims != dims - 1 && Agents[i].Number < dims*dims - 1 - dims)
             {
                 Triangle newTrianglex = new Triangle(Agents[i], Agents[i + dims + 1], Agents[i + 1]);
                 Triangles.Add(newTrianglex);
@@ -171,7 +171,7 @@ public class ClothSystem : MonoBehaviour
 
     public Vector3 Gravity(Agent x)
     {
-        Vector3 gravity = new Vector3(0, -10, 0)*x.mass;
+        Vector3 gravity = new Vector3(0, -10, 0)*x.Mass;
         return gravity;
     }
 
