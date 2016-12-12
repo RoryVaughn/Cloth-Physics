@@ -175,7 +175,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 423351187}
-        m_MethodName: UISetDense
+        m_MethodName: UiSetDense
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 29942875}
@@ -682,7 +682,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 423351187}
-        m_MethodName: UIintructions
+        m_MethodName: UiIntructions
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 383357831}
@@ -880,7 +880,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 423351187}
-        m_MethodName: UISetRest
+        m_MethodName: UiSetRest
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 415704401}
@@ -920,10 +920,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Joint: {fileID: 1000011157726044, guid: dc499c9b64cb5154fb173b813e03f374, type: 2}
-  mass: 0.1
-  dims: 10
+  Mass: 0.1
+  Dims: 10
   Grav: 0.55
-  rest: 1
+  Rest: 1
   Spr: 6.21
   Damp: 1
   Dense: 1
@@ -931,8 +931,8 @@ MonoBehaviour:
   Air1: 0.01
   Air2: 0
   Break: 0
-  intruct: 0
-  text: {fileID: 700776992}
+  Intruct: 0
+  Text: {fileID: 700776992}
   Line: {fileID: 1000010047495704, guid: 3ac48ba53ea906643b05cbacb45047f5, type: 2}
 --- !u!4 &423351191
 Transform:
@@ -1374,7 +1374,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 423351187}
-        m_MethodName: UIReset
+        m_MethodName: UiReset
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 557311880}
@@ -2043,7 +2043,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 423351187}
-        m_MethodName: UISetGravity
+        m_MethodName: UiSetGravity
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 885234780}
@@ -2629,7 +2629,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 423351187}
-        m_MethodName: UISetAir2
+        m_MethodName: UiSetAir2
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 1030747858}
@@ -3000,7 +3000,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 423351187}
-        m_MethodName: UISetDamp
+        m_MethodName: UiSetDamp
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 1223610560}
@@ -3819,7 +3819,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 423351187}
-        m_MethodName: UISetAir1
+        m_MethodName: UiSetAir1
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 1709310624}
@@ -4090,7 +4090,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 423351187}
-        m_MethodName: UISetSpr
+        m_MethodName: UiSetSpr
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 1858271591}

@@ -31,10 +31,49 @@ public class MonoAgent : MonoBehaviour //, IPointerDownHandler, IDragHandler
 
     private void OnMouseDrag()
     {
-        var curScreenPoint = new Vector3(Input.mousePosition.x, Input.mousePosition.y, ScreenPoint.z);
-        var curPosition = Camera.main.ScreenToWorldPoint(curScreenPoint) + Offset;
-        Particle.Position = curPosition;
-        transform.position = curPosition;
+
+            var curScreenPoint = new Vector3(Input.mousePosition.x, Input.mousePosition.y, ScreenPoint.z);
+            var curPosition = Camera.main.ScreenToWorldPoint(curScreenPoint) + Offset;
+            Particle.Position = curPosition;
+            transform.position = curPosition;
+        if (Particle.Position.y > 1.7f)
+        {
+            Particle.Position = new Vector3(Particle.Position.x, 1.7f, Particle.Position.z);
+            transform.position = new Vector3(transform.position.x, 1.7f, transform.position.z);
+        }
+        //bot boundaries
+        if (Particle.Position.y < -10.8f)
+        {
+            Particle.Position = new Vector3(Particle.Position.x, -10.8f, Particle.Position.z);
+            transform.position = new Vector3(transform.position.x, -10.8f, transform.position.z);
+        }
+        //back wall boundaries
+        if (Particle.Position.z > 5.0f)
+        {
+            Particle.Position = new Vector3(Particle.Position.x, Particle.Position.y, 5.0f);
+            transform.position = new Vector3(transform.position.x, transform.position.y, 5.0f);
+        }
+        //your facewall boundaries
+        if (Particle.Position.z < -4.0f)
+        {
+            Particle.Position = new Vector3(Particle.Position.x, Particle.Position.y, -4.0f);
+            transform.position = new Vector3(transform.position.x, transform.position.y, -4.0f);
+        }
+        //left boundaries
+        if (Particle.Position.x < -3.0f)
+        {
+            Particle.Position = new Vector3(-3.0f, Particle.Position.y, Particle.Position.z);
+            transform.position = new Vector3(-3.0f, transform.position.y, transform.position.z);
+        }
+        //right boundaries
+        if (Particle.Position.x > 13.0f)
+        {
+            Particle.Position = new Vector3(13.0f, Particle.Position.y, Particle.Position.z);
+            transform.position = new Vector3(13.0f, transform.position.y, transform.position.z);
+        }
+            
+
+
     }
 
 
@@ -44,10 +83,9 @@ public class MonoAgent : MonoBehaviour //, IPointerDownHandler, IDragHandler
         //Particle = new Agent(GetComponent<MonoAgent>());
         //sets the first two anchors
         Number = Particle.Number;
-        if (Number == 0 || Number == Dims - 1)
-        {
-            Anchor = true;
-        }
+        if (Number != 0 && Number != Dims - 1) return;
+        Anchor = true;
+        Particle.Anchor = true;
     }
 
     // Update is called once per frame
@@ -60,44 +98,10 @@ public class MonoAgent : MonoBehaviour //, IPointerDownHandler, IDragHandler
             if (Physics.Raycast(_ray, out Hit))
             {
                 Hit.collider.GetComponent<MonoAgent>().Anchor = false;
+                Hit.collider.GetComponent<MonoAgent>().Particle.Anchor = false;
             }
         }
-        //top boundaries
-        if (transform.position.y > 1.7f)
-        {
-            transform.position = new Vector3(transform.position.x, 1.7f, transform.position.z);
-            Force += new Vector3(0, -0.7f*(Acceleration.y*Mass), 0);
-        }
-        //bot boundaries
-        if (transform.position.y < -10.8f)
-        {
-            transform.position = new Vector3(transform.position.x, -10.8f, transform.position.z);
-            Force += new Vector3(0, -0.7f*(Acceleration.y*Mass), 0);
-        }
-        //back wall boundaries
-        if (transform.position.z > 5.0f)
-        {
-            transform.position = new Vector3(transform.position.x, transform.position.y, 5.0f);
-            Force += new Vector3(0, 0, -0.7f*(Acceleration.z*Mass));
-        }
-        //your facewall boundaries
-        if (transform.position.z < -4.0f)
-        {
-            transform.position = new Vector3(transform.position.x, transform.position.y, -4.0f);
-            Force += new Vector3(0, 0, -0.7f*(Acceleration.z*Mass));
-        }
-        //left boundaries
-        if (transform.position.x < -3.0f)
-        {
-            transform.position = new Vector3(-3.0f, transform.position.y, transform.position.z);
-            Force += new Vector3(-0.7f*(Acceleration.x*Mass), 0, 0);
-        }
-        //right boundaries
-        if (transform.position.x > 13.0f)
-        {
-            transform.position = new Vector3(13.0f, transform.position.y, transform.position.z);
-            Force += new Vector3(-0.7f*(Acceleration.x*Mass), 0, 0);
-        }
+
         if (Anchor != true)
         {
             //addition of the forces to change the position of the particles.

@@ -26,8 +26,51 @@ public class Agent
         Number = id;
     }
 
+    public Vector3 Boundaries(int top,int bot, int back, int face, int left, int right, Agent node)
+    {
+
+        return Position;
+    }
+
     public Vector3 CalcuateForce()
     {
+        //top boundaries
+        if (Position.y > 1.7f)
+        {
+            Position = new Vector3(Position.x, 1.7f, Position.z);
+            Force += new Vector3(0, -0.7f * (Velocity.y * Mass), 0);
+        }
+        //bot boundaries
+        if (Position.y < -10.8f)
+        {
+            Position = new Vector3(Position.x, -10.8f, Position.z);
+            Force += new Vector3(0, -0.7f * (Velocity.y * Mass), 0);
+        }
+        //back wall boundaries
+        if (Position.z > 5.0f)
+        {
+            Position = new Vector3(Position.x, Position.y, 5.0f);
+            Force += new Vector3(0, 0, -0.7f * (Velocity.z * Mass));
+        }
+        //your facewall boundaries
+        if (Position.z < -4.0f)
+        {
+            Position = new Vector3(Position.x, Position.y, -4.0f);
+            Force += new Vector3(0, 0, -0.7f * (Velocity.z * Mass));
+        }
+        //left boundaries
+        if (Position.x < -3.0f)
+        {
+            Position = new Vector3(-3.0f, Position.y, Position.z);
+            Force += new Vector3(-0.7f * (Velocity.x * Mass), 0, 0);
+        }
+        //right boundaries
+        if (Position.x > 13.0f)
+        {
+            Position = new Vector3(13.0f, Position.y, Position.z);
+            Force += new Vector3(-0.7f * (Velocity.x * Mass), 0, 0);
+        }
+        if (Anchor) return Position;
         Acceleration = 1/Mass*Force;
         Velocity += Acceleration*Time.deltaTime;
         Velocity = Vector3.ClampMagnitude(Velocity, 5.0f);

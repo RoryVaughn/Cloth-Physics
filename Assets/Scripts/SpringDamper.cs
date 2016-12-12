@@ -5,35 +5,35 @@ public class SpringDamper
     //reference to the two particles in the spring damper
     public Agent A;
     public Agent B;
-    private float Spring;
-    private float Damper;
-    Vector3 e1; //displacement between the particles
-    public float l; //magnitude of the displacement
-    Vector3 e; //normalized displacement vecotr
-    float dir1; //particle A's Velocity
-    float dir2; //particle B's Velocity
-    Vector3 Force;
-    float Spr1; //Spring coefficient
-    float Damp1; //damping coefficient
-    float Rest1; //rest length coefficient
-    public GameObject line;
+    private float _spring;
+    private float _damper;
+    private Vector3 _e1; //displacement between the particles
+    public float L; //magnitude of the displacement
+    private Vector3 _e; //normalized displacement vecotr
+    private float _dir1; //particle A's Velocity
+    private float _dir2; //particle B's Velocity
+    private Vector3 _force;
+    private float _spr1; //Spring coefficient
+    private float _damp1; //damping coefficient
+    private float _rest1; //rest length coefficient
+    public GameObject Line;
 
-    public void ComputeForce(float Spr, float Damp, float Rest)
+    public void ComputeForce(float spr, float damp, float rest)
     {
-        Spr1 = Spr;
-        Damp1 = Damp;
-        Rest1 = Rest;
-        e1 = B.Position - A.Position;
-        l = e1.magnitude;
-        e = e1/l;
-        dir1 = Vector3.Dot(e, A.Velocity);
-        dir2 = Vector3.Dot(e, B.Velocity);
-        Spring = -Spr1*(Rest1 - l);
-        Damper = -Damp1*(dir1 - dir2);
-        Force = (Spring + Damper)*e;
+        _spr1 = spr;
+        _damp1 = damp;
+        _rest1 = rest;
+        _e1 = B.Position - A.Position;
+        L = _e1.magnitude;
+        _e = _e1/L;
+        _dir1 = Vector3.Dot(_e, A.Velocity);
+        _dir2 = Vector3.Dot(_e, B.Velocity);
+        _spring = -_spr1*(_rest1 - L);
+        _damper = -_damp1*(_dir1 - _dir2);
+        _force = (_spring + _damper)*_e;
         //adds the force to each of the partles in the spring damper
-        A.Force += Force;
-        B.Force += -Force;
+        A.Force += _force;
+        B.Force += -_force;
     }
 
     public SpringDamper()

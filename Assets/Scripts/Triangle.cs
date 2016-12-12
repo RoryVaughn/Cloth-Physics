@@ -6,38 +6,38 @@ public class Triangle
     public Agent P1;
     public Agent P2;
     public Agent P3;
-    public float p; //density coefficient
-    public float c; //drag coefficient
-    public float a; //wind power with magnitude
+    public float P; //density coefficient
+    public float C; //drag coefficient
+    public float A; //wind power with magnitude
     public float Aa; //normalized wind vector
-    public Vector3 n; //cross Product
+    public Vector3 N; //cross Product
     public Vector3 Vsurface;
     public Vector3 Vair1;
-    public Vector3 v;
+    public Vector3 V;
 
-    public void Air(float Dense, float Drag, Vector3 Vair)
+    public void Air(float dense, float drag, Vector3 vair)
     {
-        p = Dense;
-        c = Drag;
-        Vair1 = Vair;
+        P = dense;
+        C = drag;
+        Vair1 = vair;
         Vsurface = (P1.Velocity + P2.Velocity + P3.Velocity)/3;
-        v = Vsurface - Vair;
-        n = Vector3.Cross(P2.Position - P1.Position, P3.Position - P1.Position)
+        V = Vsurface - vair;
+        N = Vector3.Cross(P2.Position - P1.Position, P3.Position - P1.Position)
             /Vector3.Cross(P2.Position - P1.Position, P3.Position - P1.Position).magnitude;
-        a = 0.5f*Vector3.Cross(P2.Position - P1.Position, P3.Position - P1.Position).magnitude;
-        Aa = a*(Vector3.Dot(v, n)/v.magnitude);
+        A = 0.5f*Vector3.Cross(P2.Position - P1.Position, P3.Position - P1.Position).magnitude;
+        Aa = A*(Vector3.Dot(V, N)/V.magnitude);
         //calculates the strength and direction of the wind
-        Vector3 Faero = -0.5f*p*(v.magnitude*v.magnitude)*c*Aa*n;
+        var faero = -0.5f*P*(V.magnitude*V.magnitude)*C*Aa*N;
         //separates the wind power to all of the particles in the traingle
-        P1.Force += Faero/3;
-        P2.Force += Faero/3;
-        P3.Force += Faero/3;
+        P1.Force += faero/3;
+        P2.Force += faero/3;
+        P3.Force += faero/3;
     }
 
-    public Triangle(Agent P1, Agent P2, Agent P3)
+    public Triangle(Agent p1, Agent p2, Agent p3)
     {
-        this.P1 = P1;
-        this.P2 = P2;
-        this.P3 = P3;
+        P1 = p1;
+        P2 = p2;
+        P3 = p3;
     }
 }
