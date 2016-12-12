@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class Agent
 {
@@ -26,13 +27,7 @@ public class Agent
         Number = id;
     }
 
-    public Vector3 Boundaries(int top,int bot, int back, int face, int left, int right, Agent node)
-    {
-
-        return Position;
-    }
-
-    public Vector3 CalcuateForce()
+    public void Boundaries()
     {
         //top boundaries
         if (Position.y > 1.7f)
@@ -65,11 +60,14 @@ public class Agent
             Force += new Vector3(-0.7f * (Velocity.x * Mass), 0, 0);
         }
         //right boundaries
-        if (Position.x > 13.0f)
-        {
-            Position = new Vector3(13.0f, Position.y, Position.z);
-            Force += new Vector3(-0.7f * (Velocity.x * Mass), 0, 0);
-        }
+        if (!(Position.x > 13.0f)) return;
+        Position = new Vector3(13.0f, Position.y, Position.z);
+        Force += new Vector3(-0.7f * (Velocity.x * Mass), 0, 0);
+    }
+
+    public Vector3 CalcuateForce()
+    {
+        Boundaries();
         if (Anchor) return Position;
         Acceleration = 1/Mass*Force;
         Velocity += Acceleration*Time.deltaTime;
