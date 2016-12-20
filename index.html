@@ -32,10 +32,24 @@
 <script src="Release/UnityLoader.js"></script>
 
     
-    <div style="height: 95%;"></div>
-    <h1 style="text-align: center; color: black;">Boids Flocking Behavior</h1>
-    <p style="text-align: center; color: black;">This project simulates real world bird flocking behavior in a virtual environment. This project uses boid rules one to six: Cohesion, Dispersion, Alignment, Tendency, Velocity Limiting and Bounding Positions.</p>
-	<br/>
+   <div style="height: 95%; width: 75%;"></div>
+    <h1 style="padding:  0px 30px; text-align: center;  color: black;">Cloth Physics Simulation</h1>
+    <h4 style="padding:  0px 30px; text-align: center;  color: black;">Controls: Right click and drag sliders to change the corresponding coefficent</h4>
+    <p style=" padding: 10px 450px;text-align: center;  color: black;"> <strong>Summary : </strong>Boids Flocking Behaviour is an algorithm that moves and steers particles or “nodes” around each other as a system. This algorithm was made to imitate the behavior of the animals that use flocking behavior in the wild, such as fish, gnats, and birds. The main three rules of the algorithm consist of using the other particles in the “flock” to steer them, although there are more. These rules allow for a “Boids System” to be made so that each particle follows the same rules as the next one, much like in a flock. Although it is a system, each particle has its own current velocity vector that steers itself, based on the sum of the forces from each rule. The forces for these rules are also multiplied by a coefficient that allows the user to edit the strength of each rule, without having to change the actual algorithm. Below I will go into detail about each of the the rules and explain their importance to the algorithm.</p>
+<p style=" padding: 10px 450px;text-align: center;  color: black;">
+<strong>Rule 1: Cohesion</strong> - This rule steers each particle towards a perceived center of the flock. This perceived center is different than the actual center, and it is very important to know the difference in this algorithm. The actual center is the same position for the entire flock. The perceived center is calculated for each particle, by taking the average positions of all particles, with respect to mass and excluding itself. This rule then adds force to the particles individually so they can seek their own perceived center of mass. The direction to the perceived center is normalized to have a definite direction, and to allow the coefficient to change its strength. This allows the flock to keep itself together sand be “cohesive”.</p>
+<p style=" padding: 10px 450px;text-align: center;  color: black;">
+<strong>Rule 2: Separation</strong> - This rule steers particles away from each other if they are close enough. As two particles come into the range of what they would consider “too close”, they would then add force in the direction away from the other particle. This force is much stronger, the closer they are to each other.The force direction is calculated by taking the vector from one particle to the other, negating it, and then normalizing it.</p>
+<p style=" padding: 10px 450px;text-align: center;  color: black;">
+<strong>Rule 3: Alignment</strong> This rule is relatively simple compared to the others. It simply takes the other particles’ velocity in its group and adds the normalized average of these vectors to its own desired velocity. This makes the flock respond more as a group. This rule itself can change whether the flock behaves chaotic, like a group of gnats, or orderly, like a school of fish. The higher this coefficient, the more accurate the velocity matching will be. If you make it high enough, the group of particles will react to each others’ movement almost instantaneously. </p>
+<p style=" padding: 10px 450px;text-align: center;  color: black;">
+The following two rules are not as important to the algorithm as the first three. They do change the behavior a bit, and thus I included them in my implementation of the algorithm.</p>
+
+	<p style=" padding: 10px 450px;text-align: center;  color: black;">
+<strong>Rule 4: Tendency</strong> - This rule is a bit like cohesion, but much easier to calculate. This rule gives the flock a central point that the system will flock around. It adds force to send the particle toward a point that is specified in the algorithm. In my implementation, the cube in the center is that point. The vector towards the cube is normalized, so the coefficient is in charge of the strength of the force added. I chose to add this rule because it is much easier to corral the particles, if they decide to wander off.</p>
+<p style=" padding: 10px 450px;text-align: center;  color: black;">
+  <strong>Rule 5: Limit</strong> - This is by far the easiest rule, however, it does play a role in my implementation. It simply gives each particle a “max velocity.”  Since the algorithm constantly adds forces, sometimes the particles may accumulate quite a high magnitude for their velocity. This simply limits it and prevents the particles from going too fast. Unlike the coefficients in the previous rules, the slider labeled “Limit” changes the actual velocity limit in the rule. So the higher the slider, the higher the limit.</p>
+  <br/>
 	<br/>
   </body>
 </html>
